@@ -10,8 +10,8 @@ export const login = async (username: string, password: string) => {
             username,
             password,
         });
-        console.log(response.data,'response data returned')
-        return response.data; 
+        console.log(response,'response')
+        return response.data;  
     } catch (error) {
         throw error; 
     }

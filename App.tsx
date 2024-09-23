@@ -4,18 +4,27 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import LoginScreen from "./screens/LoginScreen";
 import ProfileScreen from "./screens/ProfileScreen";
+import { AuthProvider } from "./context/AuthContext";
+import { ExerciseProvider } from "./context/ExerciseContext";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="Login" component={LoginScreen} />
-        {/* You can add other screens here in the future */}
-      </Stack.Navigator>
-      <StatusBar style="auto" />
-    </NavigationContainer>
+    <AuthProvider>
+      <ExerciseProvider>
+        <NavigationContainer>
+          <Stack.Navigator
+            initialRouteName="Login"
+            screenOptions={{ headerShown: false }}
+          >
+            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="Profile" component={ProfileScreen} />
+          </Stack.Navigator>
+          <StatusBar style="auto" />
+        </NavigationContainer>
+      </ExerciseProvider>
+    </AuthProvider>
   );
 }
 
