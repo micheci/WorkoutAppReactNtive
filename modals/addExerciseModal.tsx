@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Modal, View, Text, Button, TextInput, StyleSheet } from "react-native";
 import { SelectList } from "react-native-dropdown-select-list";
+import { exerciseStore } from "../store/ExerciseStore";
 
 interface AddExerciseModalProps {
   visible: boolean;
@@ -17,16 +18,29 @@ const AddExerciseModal: React.FC<AddExerciseModalProps> = ({
   onClose,
   onAddExercise,
 }) => {
+  const exercisesData = exerciseStore.exerciseState.get(); // Access the state
+
+  useEffect(() => {
+    const fetchExercises = async () => {
+      console.log("Fetching exercises...");
+      await exerciseStore.getExercises(); // Fetch exercises
+    };
+
+    fetchExercises();
+  }, []);
+
+  console.log(exercisesData, "Initial data from state");
+
   const [exerciseName, setExerciseName] = React.useState<string>("Push Up");
   const [sets, setSets] = React.useState<number>(0);
   const [reps, setReps] = React.useState<number>(0);
-
-  const exercises = [
-    { key: "1", value: "Push Up" },
-    { key: "2", value: "Pull Up" },
-    { key: "3", value: "Squat" },
-    { key: "4", value: "Bench Press" },
-  ]; // Hardcoded data
+  const exerciseArray = exercisesData.exercises;
+  console.log(exercisesData.exercises, "in modal");
+  // Transform exercisesData into the required format for SelectList
+  const exercises = exerciseArray.map((exercise, index) => ({
+    key: String(exercise.exerciseId), // Ensure key is a string
+    value: exercise.name,
+  }));
 
   const handleAdd = () => {
     onAddExercise({ name: exerciseName, sets, reps });
@@ -41,7 +55,7 @@ const AddExerciseModal: React.FC<AddExerciseModalProps> = ({
         <Text style={styles.label}>Exercise Name</Text>
         <SelectList
           setSelected={setExerciseName}
-          data={exercises}
+          data={exercises} // Use the transformed exercises array
           save="value"
           placeholder="Select an exercise"
           boxStyles={{ borderRadius: 2 }}
