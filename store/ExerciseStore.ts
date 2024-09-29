@@ -11,7 +11,6 @@ const exerciseState = hookstate<ExerciseData>({
 async function getExercises() {
   try {
     const response = await fetchExercises(); // Fetch exercises from the backend
-    console.log('in store')
     exerciseState.exercises.set(response); // Store fetched exercises in state
     return response;
   } catch (e) {

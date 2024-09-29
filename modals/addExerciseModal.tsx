@@ -6,11 +6,7 @@ import { exerciseStore } from "../store/ExerciseStore";
 interface AddExerciseModalProps {
   visible: boolean;
   onClose: () => void;
-  onAddExercise: (exercise: {
-    name: string;
-    sets: number;
-    reps: number;
-  }) => void;
+  onAddExercise: any;
 }
 
 const AddExerciseModal: React.FC<AddExerciseModalProps> = ({
@@ -22,30 +18,27 @@ const AddExerciseModal: React.FC<AddExerciseModalProps> = ({
 
   useEffect(() => {
     const fetchExercises = async () => {
-      console.log("Fetching exercises...");
       await exerciseStore.getExercises(); // Fetch exercises
     };
 
     fetchExercises();
   }, []);
 
-  console.log(exercisesData, "Initial data from state");
-
-  const [exerciseName, setExerciseName] = React.useState<string>("Push Up");
+  const [exerciseId, setExerciseId] = React.useState<string>("id");
   const [sets, setSets] = React.useState<number>(0);
   const [reps, setReps] = React.useState<number>(0);
+  const [weight, setWeight] = React.useState<number>(0);
+  const exerciseData = {
+    exerciseId: exerciseId,
+    reps: reps,
+    sets: sets,
+  };
   const exerciseArray = exercisesData.exercises;
-  console.log(exercisesData.exercises, "in modal");
   // Transform exercisesData into the required format for SelectList
   const exercises = exerciseArray.map((exercise, index) => ({
     key: String(exercise.exerciseId), // Ensure key is a string
     value: exercise.name,
   }));
-
-  const handleAdd = () => {
-    onAddExercise({ name: exerciseName, sets, reps });
-    onClose(); // Close the modal after adding
-  };
 
   return (
     <Modal visible={visible} animationType="slide">
@@ -54,9 +47,10 @@ const AddExerciseModal: React.FC<AddExerciseModalProps> = ({
 
         <Text style={styles.label}>Exercise Name</Text>
         <SelectList
-          setSelected={setExerciseName}
+          //setSeelcted gets us te value so the name but i need to get the exerciseId
+          setSelected={setExerciseId}
           data={exercises} // Use the transformed exercises array
-          save="value"
+          save="key"
           placeholder="Select an exercise"
           boxStyles={{ borderRadius: 2 }}
         />
@@ -77,7 +71,15 @@ const AddExerciseModal: React.FC<AddExerciseModalProps> = ({
           style={styles.input}
         />
 
-        <Button title="Add" onPress={handleAdd} />
+        <Text style={styles.label}>Weight</Text>
+        <TextInput
+          keyboardType="numeric"
+          value={weight.toString()}
+          onChangeText={(text) => setWeight(Number(text))}
+          style={styles.input}
+        />
+
+        <Button title="Add" onPress={() => onAddExercise(exerciseData)} />
         <Button title="Cancel" onPress={onClose} />
       </View>
     </Modal>
