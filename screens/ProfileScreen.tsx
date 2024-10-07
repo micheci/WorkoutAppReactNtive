@@ -2,127 +2,110 @@ import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
-  Button,
-  StyleSheet,
-  TouchableOpacity,
-  Dimensions,
   FlatList,
+  StyleSheet,
+  Dimensions,
+  ActivityIndicator,
 } from "react-native";
-import { useAuth } from "../context/AuthContext";
-import AddExerciseModal from "../modals/addExerciseModal";
 import { userExerciseStore } from "../store/UserExerciseStore";
-import { Exercise, ExerciseResponse } from "../interfaces/Iexercises";
+import { DailyExerciseData, UserExercise } from "../interfaces/Iexercises";
+import ProfileHeader from "../components/ProfileHeader";
+import AddExercise from "../components/buttons/AddExercise";
 
-const ProfileScreen = () => {
-  const { user, logout } = useAuth();
-  const [modalVisible, setModalVisible] = useState(false);
-  const [todayExercises, setTodayExercises] = useState<ExerciseResponse[]>([]);
-  const [currentDate, setCurrentDate] = useState<Date>(new Date());
-  const [noExercisesMessage, setNoExercisesMessage] = useState("");
+const ExerciseSwiper = () => {
+  const [exerciseData, setExerciseData] = useState<DailyExerciseData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const windowWidth = Dimensions.get("window").width;
 
-  const handleLogout = async () => {
-    await logout();
-  };
-
-  // Fetch exercises for a given date
-  const getDailyExercise = async (date: Date) => {
+  const fetchData = async () => {
+    setLoading(true);
     try {
-      console.log("Fetching exercises for date:", date);
-      const formattedDate = date.toISOString().split("T")[0]; // Format to 'YYYY-MM-DD'
-      const response = await userExerciseStore.fetchExercisesByDate(
-        formattedDate
-      );
-
-      if (response.length === 0) {
-        setTodayExercises([]);
-        setNoExercisesMessage(`No exercises found for ${formattedDate}.`);
-      } else {
-        setTodayExercises(response);
-        setNoExercisesMessage("");
-      }
-    } catch (e) {
-      console.error(e);
-      setTodayExercises([]);
-      setNoExercisesMessage("Error fetching exercises.");
+      const { data } = await userExerciseStore.fetchExercisesRange();
+      console.log(data, "exercisesData");
+      setExerciseData(data);
+    } catch (error) {
+      console.error("Error fetching exercises:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    getDailyExercise(currentDate); // Fetch exercises for the current date
-  }, [currentDate]); // Add currentDate as a dependency
+    fetchData();
+  }, []);
 
-  // Handle swiping right (yesterday)
-  const handleSwipeRight = () => {
-    const yesterday = new Date(currentDate);
-    yesterday.setDate(currentDate.getDate() - 1);
-    setCurrentDate(yesterday); // Update the current date to yesterday
+  const handleAddExercise = async (exerciseData: UserExercise) => {
+    await userExerciseStore.addExercise(exerciseData);
+    await fetchData(); // Refresh the data after adding
   };
 
-  // Handle swiping left (tomorrow)
-  const handleSwipeLeft = () => {
-    const tomorrow = new Date(currentDate);
-    tomorrow.setDate(currentDate.getDate() + 1);
-    setCurrentDate(tomorrow); // Update the current date to tomorrow
-  };
-
-  const handleAddExercise = async (exerciseData: any) => {
-    const formattedData = {
-      exercise: {
-        exerciseId: parseInt(exerciseData.exerciseId),
-      },
-      date: new Date().toISOString().split("T")[0],
-      reps: exerciseData.reps,
-      sets: exerciseData.sets,
-    };
-
-    await userExerciseStore.addExercise(formattedData);
-    setModalVisible(false);
-  };
-
-  const renderExerciseItem = ({ item }: any) => (
-    <View style={styles.exerciseItem}>
-      <Text>{`Exercise ID: ${item.exercise.exerciseId}`}</Text>
-      <Text>{`Reps: ${item.reps}`}</Text>
-      <Text>{`Sets: ${item.sets}`}</Text>
+  const renderItem = ({ item }: { item: DailyExerciseData }) => (
+    <View style={[styles.card, { width: windowWidth }]}>
+      <Text style={styles.date}>{item.date}</Text>
+      {item.exercises.length > 0 ? (
+        item.exercises.map((exercise) => (
+          <View key={exercise.id} style={styles.exerciseContainer}>
+            <Text style={styles.exercise}>
+              {exercise.exerciseName} - {exercise.reps} reps, {exercise.sets}{" "}
+              sets
+              {exercise.weight ? `, ${exercise.weight} lbs` : ""}
+              {exercise.notes ? ` - ${exercise.notes}` : ""}
+            </Text>
+          </View>
+        ))
+      ) : (
+        <Text style={styles.noExercises}>No exercises recorded for today.</Text>
+      )}
     </View>
   );
 
+  const initialScrollIndex = 15; // Start at index 15
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-        <Text style={styles.logoutText}>Logout</Text>
-      </TouchableOpacity>
-
-      <View style={styles.content}>
-        <Text style={styles.title}>Welcome, {user?.username}!</Text>
-
-        {noExercisesMessage ? (
-          <Text style={styles.message}>{noExercisesMessage}</Text>
-        ) : (
-          <FlatList
-            data={todayExercises}
-            renderItem={renderExerciseItem}
-            keyExtractor={(item) => item.id.toString()}
-            style={styles.exerciseList}
-          />
-        )}
-
-        <View style={styles.buttonContainer}>
-          <Button title="Add Exercise" onPress={() => setModalVisible(true)} />
+      <ProfileHeader />
+      {exerciseData.length > 0 ? (
+        <FlatList
+          data={exerciseData}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.date}
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          snapToAlignment="center"
+          snapToInterval={windowWidth}
+          decelerationRate="fast"
+          initialScrollIndex={initialScrollIndex}
+          getItemLayout={(data, index) => ({
+            length: windowWidth,
+            offset: windowWidth * index,
+            index,
+          })}
+          onScrollToIndexFailed={(info) => {
+            console.warn(
+              `Failed to scroll to index ${info.index}: ${info.highestMeasuredFrameIndex}`
+            );
+          }}
+          ListEmptyComponent={
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyText}>No exercises recorded.</Text>
+            </View>
+          }
+        />
+      ) : (
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyText}>No exercise data available.</Text>
         </View>
-      </View>
-
-      <AddExerciseModal
-        visible={modalVisible}
-        onClose={() => setModalVisible(false)}
-        onAddExercise={handleAddExercise}
-      />
-
-      {/* Example buttons to simulate swipe actions */}
-      <View style={styles.swipeButtons}>
-        <Button title="Swipe Left (Tomorrow)" onPress={handleSwipeLeft} />
-        <Button title="Swipe Right (Yesterday)" onPress={handleSwipeRight} />
-      </View>
+      )}
+      <AddExercise onAddExercise={handleAddExercise} />
     </View>
   );
 };
@@ -130,60 +113,59 @@ const ProfileScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    paddingTop: 40,
-    paddingBottom: 20,
+    backgroundColor: "#282828",
   },
-  logoutButton: {
-    position: "absolute",
-    top: 40,
-    right: 20,
-    backgroundColor: "red",
-    padding: 10,
-    borderRadius: 5,
-  },
-  logoutText: {
-    color: "#fff",
-    fontWeight: "bold",
-  },
-  content: {
+  loadingContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: 16,
   },
-  title: {
-    fontSize: Dimensions.get("window").width * 0.06,
-    marginBottom: 20,
-    textAlign: "center",
+  card: {
+    height: "100%",
+    justifyContent: "flex-start", // Align items to the start
+    alignItems: "center",
+    backgroundColor: "#3A4D6A",
+    borderWidth: 1, // Add border
+    borderColor: "#4A4A4A", // Darker border color
+    borderRadius: 8, // Rounded corners
+    padding: 20,
+    shadowColor: "#000", // Shadow for elevation
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5, // For Android shadow
   },
-  buttonContainer: {
-    flex: 1,
-    justifyContent: "flex-end",
-    marginBottom: 20,
-    width: "100%",
+  date: {
+    fontWeight: "bold",
+    fontSize: 24,
+    marginBottom: 10,
+    color: "#FFFFFF", // Change date text color to white
   },
-  exerciseList: {
-    width: "100%",
-    marginBottom: 20,
-  },
-  exerciseItem: {
+  exerciseContainer: {
+    borderWidth: 1, // Border for each exercise
+    borderColor: "#4A4A4A", // Darker border color
+    borderRadius: 5, // Rounded corners for each exercise
     padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
+    marginVertical: 5, // Space between exercises
+    width: "100%", // Make sure it takes the full width
   },
-  message: {
-    fontSize: Dimensions.get("window").width * 0.05,
-    color: "gray",
-    textAlign: "center",
-    marginVertical: 20,
+  exercise: {
+    fontSize: 18,
+    color: "#FFFFFF", // Change exercise text color to white
   },
-  swipeButtons: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-    paddingHorizontal: 20,
+  noExercises: {
+    fontSize: 16,
+    color: "#999",
+  },
+  emptyContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100%",
+  },
+  emptyText: {
+    fontSize: 18,
+    color: "#999",
   },
 });
 
-export default ProfileScreen;
+export default ExerciseSwiper;

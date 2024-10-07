@@ -1,41 +1,20 @@
-export interface Exercise {
-    exerciseId: number;
-    name: string;
-    description: string;
-    category: string;
-    difficulty: 'Easy' | 'Medium' | 'Hard'; // Adjust based on your requirements
-    duration: number | null; // Assuming duration is in minutes or null
-    imageUrl: string;
-    createdAt: Date | null; // Assuming you may want to use a Date object
-    updatedAt: Date | null; // Same as above
-  }
-  
-  export interface ExerciseData{
-    exercises:ExerciseResponse[]
-  }
-  export interface ExerciseResponse {
-    id: number;
-    user: {
-        id: number;
-        username: string;
-        password: string; // Consider not exposing password for security
-    };
-    exercise: {
-        exerciseId: number;
-        name: string;
-        description: string;
-        category: string;
-        difficulty: 'Easy' | 'Medium' | 'Hard';
-        duration: number | null;
-        imageUrl: string;
-        createdAt: Date | null;
-        updatedAt: Date | null;
-    };
-    date: string; // Format 'YYYY-MM-DD'
-    duration: number | null;
-    reps: number;
-    sets: number;
-    weight: number | null;
-    notes: string | null;
-    createdAt: string; // ISO date string
+export interface UserExercise{
+  id: number;
+  exerciseName: string;
+  reps: number;
+  sets: number;
+  weight: number | null; // Weight can be a number or null
+  notes: string | null; // Notes can be a string or null
+  createdAt: string; // ISO date string
+  exerciseId:string
+}
+export interface DailyExerciseData {
+  date: string; // YYYY-MM-DD
+  exercises: UserExercise[];
+}
+// Interface for the overall response
+export interface ExerciseResponse {
+  success: boolean; // Indicates if the request was successful
+  message: string; // Message about the request status
+  data: DailyExerciseData[]; // Array of daily exercise data
 }

@@ -32,6 +32,7 @@ const AddExerciseModal: React.FC<AddExerciseModalProps> = ({
     exerciseId: exerciseId,
     reps: reps,
     sets: sets,
+    weight: weight,
   };
   const exerciseArray = exercisesData.exercises;
   // Transform exercisesData into the required format for SelectList

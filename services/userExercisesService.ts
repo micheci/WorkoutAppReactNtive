@@ -1,6 +1,6 @@
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store'
-import { Exercise, ExerciseResponse } from '../interfaces/Iexercises';
+import { ExerciseResponse, UserExercise } from '../interfaces/Iexercises';
 
 const API_URL = 'http://192.168.1.10:8080'; // Update this to your actual API URL
 
@@ -13,6 +13,7 @@ export const addUserExercise = async (exerciseData:any) => {
         Authorization: `Bearer ${token}`, // Include the token in the Authorization header
       },
     }); 
+    console.log(response.data,'from backend')
     return response.data; // Axios automatically parses the response data
   } catch (error) {
     console.error("Error adding exercises:", error);
@@ -37,19 +38,36 @@ export const getCurrentDayExercises = async () => {
   };
 
  // Function to get exercises for a specific date
- export const getExercisesByDate = async (date: string): Promise<ExerciseResponse[]> => {
+ export const getExercisesByDate = async (date: string): Promise<UserExercise[]> => {
   try {
     const token = await SecureStore.getItemAsync("token");
     const response = await axios.get(`${API_URL}/user/exercises/${date}`, {
       headers: {
-        Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+        Authorization: `Bearer ${token}`, 
       },
     });
-console.log(response.data,'inserviecdate')
-    return response.data; // This should align with the Exercise[] type
+    console.log(response,'inservie')
+    return response.data; 
   } catch (error) {
     console.error("Error fetching date exercises:", error);
-    throw error; // Re-throw the error if needed for further handling
+    throw error; 
+  }
+};
+  
+ // Function to get exercises for a specific date
+ export const getExercisesByRange = async (): Promise<ExerciseResponse> => {
+  try {
+    const token = await SecureStore.getItemAsync("token");
+    const response = await axios.get(`${API_URL}/user/exercises/range`, {
+      headers: {
+        Authorization: `Bearer ${token}`, 
+      },
+    });
+    console.log(response.data,'inservie')
+    return response.data; 
+  } catch (error) {
+    console.error("Error fetching date exercises:", error);
+    throw error; 
   }
 };
   
