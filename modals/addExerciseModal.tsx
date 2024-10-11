@@ -36,10 +36,12 @@ const AddExerciseModal: React.FC<AddExerciseModalProps> = ({
   };
   const exerciseArray = exercisesData.exercises;
   // Transform exercisesData into the required format for SelectList
-  const exercises = exerciseArray.map((exercise, index) => ({
-    key: String(exercise.exerciseId), // Ensure key is a string
-    value: exercise.name,
-  }));
+  const exercises = exerciseArray.map(
+    (exercise: { exerciseId: any; name: any }, index: any) => ({
+      key: String(exercise.exerciseId), // Ensure key is a string
+      value: exercise.name,
+    })
+  );
 
   return (
     <Modal visible={visible} animationType="slide">

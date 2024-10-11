@@ -35,7 +35,7 @@ const LoginScreen = () => {
       setLoading(true); // Start loading
       try {
         await login(username, password); // Call the context login function
-        navigation.navigate("Profile"); // Redirect to Profile screen on success
+        navigation.navigate("Dashboard"); // Redirect to Profile screen on success
       } catch (error) {
         setError("Login failed. Please check your credentials.");
       } finally {
