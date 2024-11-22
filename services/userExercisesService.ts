@@ -8,6 +8,7 @@ export const addUserExercise = async (exerciseData:any) => {
   try {
     // Replace 'YOUR_TOKEN_HERE' with your actual token
     const token = await SecureStore.getItemAsync("token");
+    console.log(exerciseData,'datatobackend')
     const response = await axios.post(`${API_URL}/addExercise`,exerciseData, {
       headers: {
         Authorization: `Bearer ${token}`, // Include the token in the Authorization header
@@ -38,15 +39,15 @@ export const getCurrentDayExercises = async () => {
   };
 
  // Function to get exercises for a specific date
- export const getExercisesByDate = async (date: string): Promise<UserExercise[]> => {
+ export const getExercisesByDate = async (date: string): Promise<any[]> => {
   try {
     const token = await SecureStore.getItemAsync("token");
+    console.log('inService',date)
     const response = await axios.get(`${API_URL}/user/exercises/${date}`, {
       headers: {
         Authorization: `Bearer ${token}`, 
       },
     });
-    console.log(response,'inservie')
     return response.data; 
   } catch (error) {
     console.error("Error fetching date exercises:", error);

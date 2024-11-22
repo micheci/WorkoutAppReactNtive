@@ -7,6 +7,7 @@ import ProfileScreen from "./screens/ProfileScreen";
 import { AuthProvider } from "./context/AuthContext";
 import { ExerciseProvider } from "./context/ExerciseContext";
 import Dashboard from "./screens/DashBoard";
+import DashboardV2 from "./screens/DashBoardv2";
 
 const Stack = createNativeStackNavigator();
 
@@ -16,12 +17,13 @@ export default function App() {
       <ExerciseProvider>
         <NavigationContainer>
           <Stack.Navigator
-            initialRouteName="Login"
+            initialRouteName="Dashboard2"
             screenOptions={{ headerShown: false }}
           >
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Profile" component={ProfileScreen} />
             <Stack.Screen name="Dashboard" component={Dashboard} />
+            <Stack.Screen name="Dashboard2" component={DashboardV2} />
           </Stack.Navigator>
           <StatusBar style="auto" />
         </NavigationContainer>
