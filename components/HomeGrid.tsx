@@ -2,15 +2,19 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 import Box from "./Box"; // Import the Box component
 import Icon from "react-native-vector-icons/MaterialIcons"; // Import MaterialIcons
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { RootStackParamList } from "../interfaces/StackInterfaces";
 
 const HomeGrid: React.FC = () => {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
   // Example data or content for each box with icons
   const boxData = [
     {
       title: "Exercises",
       content: "Your daily workout routine",
-      onPress: () => alert("Navigate to Exercises"),
-      image: <Icon name="fitness-center" size={50} color="#FF6347" />, // Icon for Exercises
+      onPress: () => navigation.navigate("Exercises"),
+      image: <Icon name="list" size={30} color="#000" />, // Icon for Exercises
     },
     {
       title: "Nutrition",
