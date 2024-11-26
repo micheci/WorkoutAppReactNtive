@@ -13,6 +13,8 @@ import v2ExerciseDetails from "./screens/v2ExerciseDetails";
 import v2AddExercise from "./screens/v2AddExercise";
 import v2Graphs from "./screens/v2Graphs";
 import v2Nutrition from "./screens/v2Nutrition";
+import v2WeightLoseRecipes from "./screens/v2WeightLoseRecipes";
+import v2Profile from "./screens/v2Profile";
 
 const Stack = createNativeStackNavigator();
 
@@ -34,6 +36,11 @@ export default function App() {
             <Stack.Screen name="AddExercise" component={v2AddExercise} />
             <Stack.Screen name="Graphs" component={v2Graphs} />
             <Stack.Screen name="Nutrition" component={v2Nutrition} />
+            <Stack.Screen
+              name="WeightLoseRecipes"
+              component={v2WeightLoseRecipes}
+            />
+            <Stack.Screen name="Profile2" component={v2Profile} />
           </Stack.Navigator>
           <StatusBar style="auto" />
         </NavigationContainer>

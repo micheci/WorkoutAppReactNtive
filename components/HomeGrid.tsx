@@ -25,7 +25,7 @@ const HomeGrid: React.FC = () => {
     {
       title: "Profile",
       content: "View and edit your profile",
-      onPress: () => alert("Navigate to Profile"),
+      onPress: () => navigation.navigate("Profile2"),
       image: <Icon name="account-circle" size={50} color="#808080" />, // Icon for Profile
     },
     {

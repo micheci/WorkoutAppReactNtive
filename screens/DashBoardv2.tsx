@@ -31,7 +31,7 @@ const DashboardV2: React.FC = () => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} keyboardShouldPersistTaps="handled">
       {/* Profile Section */}
       <DashBaordHeader />
 

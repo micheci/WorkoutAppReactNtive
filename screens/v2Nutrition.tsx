@@ -17,7 +17,7 @@ const v2Nutrition = () => {
   // need to change this so it hits the specific pages so
   //wirght lose or high protein
   const goToRecipes = (category: string) => {
-    navigation.navigate("RecipeList", { category });
+    navigation.navigate("WeightLoseRecipes");
   };
 
   return (

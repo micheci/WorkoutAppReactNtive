@@ -1,6 +1,6 @@
 // Box.tsx
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
 // Props for the Box component
 interface BoxProps {
@@ -12,12 +12,15 @@ interface BoxProps {
 
 const Box = ({ title, content, onPress, image }: BoxProps) => {
   return (
-    <View style={styles.box} onTouchEnd={onPress}>
+    <TouchableOpacity
+      style={styles.box}
+      onPress={onPress}
+      delayPressIn={200} // Prevent accidental press during swipe
+    >
       <Text style={styles.boxTitle}>{title}</Text>
       <View>{image}</View>
-
       <Text style={styles.boxContent}>{content}</Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 

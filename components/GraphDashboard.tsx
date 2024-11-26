@@ -1,6 +1,6 @@
 // Box.tsx
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons"; // Import MaterialIcons
 
 // Props for the Box component
@@ -10,10 +10,10 @@ interface LogExerciseProp {
 
 const GraphDashboard = ({ onPress }: LogExerciseProp) => {
   return (
-    <View style={styles.box} onTouchEnd={onPress}>
+    <TouchableOpacity style={styles.box} onPress={onPress}>
       <Text style={styles.graphsTitle}>Graphs</Text>
       <Icon name="show-chart" size={50} color="#333" />{" "}
-    </View>
+    </TouchableOpacity>
   );
 };
 
