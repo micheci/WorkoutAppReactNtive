@@ -26,6 +26,10 @@ const DashboardV2: React.FC = () => {
     navigation.navigate("AddExercise");
   };
 
+  const toGraphs = () => {
+    navigation.navigate("Graphs");
+  };
+
   return (
     <ScrollView style={styles.container}>
       {/* Profile Section */}
@@ -37,7 +41,7 @@ const DashboardV2: React.FC = () => {
       <LogExercise onPress={() => toLogExercise()} />
 
       {/* Graphs Section */}
-      <GraphDashboard onPress={() => console.log("test")} />
+      <GraphDashboard onPress={() => toGraphs()} />
       {/* Main Dashboard Sections */}
       <HomeGrid />
     </ScrollView>

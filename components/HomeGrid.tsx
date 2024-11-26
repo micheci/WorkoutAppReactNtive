@@ -19,7 +19,7 @@ const HomeGrid: React.FC = () => {
     {
       title: "Nutrition",
       content: "Healthy meal plans and tips",
-      onPress: () => alert("Navigate to Nutrition"),
+      onPress: () => navigation.navigate("Nutrition"),
       image: <Icon name="apple" size={50} color="#34C759" />, // Icon for Nutrition (Apple icon)
     },
     {

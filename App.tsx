@@ -11,6 +11,8 @@ import DashboardV2 from "./screens/DashBoardv2";
 import v2ExerciseList from "./components/v2ExerciseList";
 import v2ExerciseDetails from "./screens/v2ExerciseDetails";
 import v2AddExercise from "./screens/v2AddExercise";
+import v2Graphs from "./screens/v2Graphs";
+import v2Nutrition from "./screens/v2Nutrition";
 
 const Stack = createNativeStackNavigator();
 
@@ -30,6 +32,8 @@ export default function App() {
             <Stack.Screen name="Exercises" component={v2ExerciseList} />
             <Stack.Screen name="ExerciseDetail" component={v2ExerciseDetails} />
             <Stack.Screen name="AddExercise" component={v2AddExercise} />
+            <Stack.Screen name="Graphs" component={v2Graphs} />
+            <Stack.Screen name="Nutrition" component={v2Nutrition} />
           </Stack.Navigator>
           <StatusBar style="auto" />
         </NavigationContainer>
