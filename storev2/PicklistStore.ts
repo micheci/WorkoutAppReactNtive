@@ -17,7 +17,7 @@ async function getAllExercises() {
   }
 }
 
-export const exerciseStore = {
+export const pickListStore = {
   PicklistState,
   getAllExercises,
 };

@@ -11,19 +11,9 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../interfaces/StackInterfaces";
-import { exerciseStore } from "../storev2/PicklistStore";
+import { pickListStore } from "../storev2/PicklistStore";
 import { useHookstate } from "@hookstate/core";
-
-// Sample exercise list with IDs
-const sampleExerciseList = [
-  { id: "1", name: "Incline Hammer Curls" },
-  { id: "2", name: "Wide-Grip Barbell Curl" },
-  { id: "3", name: "Barbell Bench Press" },
-  { id: "4", name: "Squats" },
-  { id: "5", name: "Push-ups" },
-  { id: "6", name: "Deadlift" },
-  { id: "7", name: "Dumbbell Shoulder Press" },
-];
+import { exerciseStore } from "../storev2/ExerciseStore";
 
 interface FormValues {
   exerciseId: string;
@@ -38,10 +28,10 @@ const V2AddExercise = () => {
       defaultValues: { exerciseId: "", exerciseName: "", sets: "", reps: "" },
     }
   );
-  const PicklistState = useHookstate(exerciseStore.PicklistState);
+  const PicklistState = useHookstate(pickListStore.PicklistState);
   useEffect(() => {
     // Fetch exercises on component mount
-    exerciseStore.getAllExercises();
+    pickListStore.getAllExercises();
   }, []);
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -60,7 +50,8 @@ const V2AddExercise = () => {
       return;
     }
     console.log("Form Data Sent to Backend:", data);
-    alert("Exercise added successfully!");
+    exerciseStore.addUserExercise(data);
+    alert("Exercises suffessfully added");
     reset();
     navigation.navigate("Dashboard2");
   };
@@ -79,12 +70,12 @@ const V2AddExercise = () => {
       {searchQuery.length > 0 && (
         <FlatList
           data={filteredExercises}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.exerciseId.toString()}
           renderItem={({ item }) => (
             <TouchableOpacity
               style={styles.dropdownItem}
               onPress={() => {
-                setValue("exerciseId", item.id); // Save the ID
+                setValue("exerciseId", item.exerciseId.toString()); // Save the ID
                 setValue("exerciseName", item.name); // Save the name
                 setSearchQuery("");
               }}
