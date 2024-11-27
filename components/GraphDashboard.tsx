@@ -12,7 +12,7 @@ const GraphDashboard = ({ onPress }: LogExerciseProp) => {
   return (
     <TouchableOpacity style={styles.box} onPress={onPress}>
       <Text style={styles.graphsTitle}>Graphs</Text>
-      <Icon name="show-chart" size={50} color="#333" />{" "}
+      <Icon name="show-chart" size={50} color="#333" />
     </TouchableOpacity>
   );
 };

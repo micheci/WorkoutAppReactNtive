@@ -90,7 +90,7 @@ const sampleExerciseList = [
   },
 ];
 
-const v2ExerciseList = () => {
+const V2ExerciseList = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const filteredExercises = sampleExerciseList.filter((exercise) =>
     exercise.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -154,4 +154,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default v2ExerciseList;
+export default V2ExerciseList;

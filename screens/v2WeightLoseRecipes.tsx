@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, SafeAreaView, FlatList } from "react-native";
 
-const v2WeightLoseRecipes = () => {
+const V2WeightLoseRecipes = () => {
   const weightLossRecipes = [
     {
       id: "1",
@@ -82,4 +82,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default v2WeightLoseRecipes;
+export default V2WeightLoseRecipes;

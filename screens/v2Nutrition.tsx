@@ -11,7 +11,7 @@ import { RootStackParamList } from "../interfaces/StackInterfaces";
 
 // Sample exercise list with IDs
 
-const v2Nutrition = () => {
+const V2Nutrition = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   // need to change this so it hits the specific pages so
@@ -83,4 +83,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default v2Nutrition;
+export default V2Nutrition;

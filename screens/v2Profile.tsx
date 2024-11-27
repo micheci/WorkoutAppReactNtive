@@ -11,7 +11,7 @@ import {
   Alert,
 } from "react-native";
 
-const v2Profile = () => {
+const V2Profile = () => {
   const [darkMode, setDarkMode] = useState(false); // State for dark/light mode
   const [contactInfo, setContactInfo] = useState("123-456-7890");
   const [email, setEmail] = useState("user@example.com");
@@ -173,4 +173,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default v2Profile;
+export default V2Profile;

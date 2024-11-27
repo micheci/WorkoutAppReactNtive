@@ -6,7 +6,7 @@ import { RootStackParamList } from "../interfaces/StackInterfaces";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { exercise } from "../components/v2ExerciseList";
 
-const v2ExerciseDetails = ({ route }: any) => {
+const V2ExerciseDetails = ({ route }: any) => {
   const { exercise } = route.params;
   console.log(exercise, "thisthe onei pciked");
   return (
@@ -41,4 +41,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default v2ExerciseDetails;
+export default V2ExerciseDetails;

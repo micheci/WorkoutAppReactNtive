@@ -18,7 +18,7 @@ const Box = ({ title, content, onPress, image }: BoxProps) => {
       delayPressIn={200} // Prevent accidental press during swipe
     >
       <Text style={styles.boxTitle}>{title}</Text>
-      <View>{image}</View>
+      {/* <View>{image}</View> */}
       <Text style={styles.boxContent}>{content}</Text>
     </TouchableOpacity>
   );

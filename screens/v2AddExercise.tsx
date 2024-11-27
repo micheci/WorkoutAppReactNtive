@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -11,6 +11,8 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../interfaces/StackInterfaces";
+import { exerciseStore } from "../storev2/PicklistStore";
+import { useHookstate } from "@hookstate/core";
 
 // Sample exercise list with IDs
 const sampleExerciseList = [
@@ -30,16 +32,24 @@ interface FormValues {
   reps: string;
 }
 
-const v2AddExercise = () => {
+const V2AddExercise = () => {
   const { control, handleSubmit, setValue, watch, reset } = useForm<FormValues>(
     {
       defaultValues: { exerciseId: "", exerciseName: "", sets: "", reps: "" },
     }
   );
+  const PicklistState = useHookstate(exerciseStore.PicklistState);
+  useEffect(() => {
+    // Fetch exercises on component mount
+    exerciseStore.getAllExercises();
+  }, []);
+
   const [searchQuery, setSearchQuery] = useState("");
-  const filteredExercises = sampleExerciseList.filter((exercise) =>
-    exercise.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredExercises = PicklistState.exercises
+    .get()
+    .filter((exercise) =>
+      exercise.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
   const selectedExerciseName = watch("exerciseName");
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -193,4 +203,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default v2AddExercise;
+export default V2AddExercise;
