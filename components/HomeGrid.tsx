@@ -11,17 +11,24 @@ const HomeGrid: React.FC = () => {
   // Example data or content for each box with icons
   const boxData = [
     {
-      title: "Exercises",
+      title: "All Exercises",
       content: "Your daily workout routine",
       onPress: () => navigation.navigate("Exercises"),
       image: <Icon name="list" size={30} color="#000" />, // Icon for Exercises
     },
     {
-      title: "Nutrition",
+      title: "View/Add Workouts",
       content: "Healthy meal plans and tips",
-      onPress: () => navigation.navigate("Nutrition"),
+      onPress: () => navigation.navigate("ViewAddWorkoutHome"),
       image: <Icon name="apple" size={50} color="#34C759" />, // Icon for Nutrition (Apple icon)
     },
+    //Can add this feature later
+    // {
+    //   title: "Nutrition",
+    //   content: "Healthy meal plans and tips",
+    //   onPress: () => navigation.navigate("Nutrition"),
+    //   image: <Icon name="apple" size={50} color="#34C759" />, // Icon for Nutrition (Apple icon)
+    // },
     {
       title: "Profile",
       content: "View and edit your profile",

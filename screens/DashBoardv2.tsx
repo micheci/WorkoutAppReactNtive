@@ -10,6 +10,7 @@ import GraphDashboard from "../components/GraphDashboard";
 import DashBaordHeader from "../components/DashboardHeader";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../interfaces/StackInterfaces";
+import LogWorkout from "../components/LogWorkout";
 
 const DashboardV2: React.FC = () => {
   // State to hold the search query
@@ -30,6 +31,10 @@ const DashboardV2: React.FC = () => {
     navigation.navigate("Graphs");
   };
 
+  const toAddWorkouts = () => {
+    navigation.navigate("V2AddWorkout");
+  };
+
   return (
     <ScrollView style={styles.container} keyboardShouldPersistTaps="handled">
       {/* Profile Section */}
@@ -38,6 +43,7 @@ const DashboardV2: React.FC = () => {
       {/* Search Bar */}
       <SearchBar query={searchQuery} onSearch={handleSearch} />
       {/* Box to allow users to log exercises  */}
+      {/* <LogWorkout onPress={() => toAddWorkouts()} /> */}
       <LogExercise onPress={() => toLogExercise()} />
 
       {/* Graphs Section */}
