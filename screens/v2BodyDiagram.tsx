@@ -6,16 +6,20 @@ import {
   TouchableOpacity,
   Text,
   View,
-  Button,
+  ActivityIndicator, // Import the ActivityIndicator
 } from "react-native";
+import { AIStore } from "../storev2/AiStore";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { RootStackParamList } from "../interfaces/StackInterfaces";
 
 const V2BodyDiagram = () => {
   const [imageDimensions, setImageDimensions] = useState({
     width: 0,
     height: 0,
   });
-
   const [activeParts, setActiveParts] = useState<string[]>([]);
+  const [loading, setLoading] = useState<boolean>(false); // Track loading state
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const bodyParts = [
     {
@@ -118,8 +122,21 @@ const V2BodyDiagram = () => {
     }
   };
 
-  const generateWorkoutAI = (activeParts: string[]) => {
-    console.log(activeParts, "the muscle groups send to ai");
+  const generateWorkoutAI = async (activeParts: string[]) => {
+    console.log(activeParts, "the muscle groups sent to AI");
+
+    setLoading(true); // Set loading to true when starting the API request
+
+    try {
+      const apiResponse = await AIStore.generateAIWorkouts(activeParts);
+      navigation.navigate("V2GeneratedWorkouts", {
+        state: { workouts: apiResponse.workouts },
+      });
+    } catch (e) {
+      console.error("Error generating workouts:", e);
+    } finally {
+      setLoading(false); // Set loading to false after the request is completed
+    }
   };
 
   return (
@@ -171,11 +188,16 @@ const V2BodyDiagram = () => {
           style={[
             styles.generateButton,
             activeParts.length === 0 && styles.disabledButton, // Gray out when no parts selected
+            loading && styles.loadingButton, // Apply loading styles when fetching
           ]}
-          disabled={activeParts.length === 0} // Disable when no parts selected
+          disabled={activeParts.length === 0 || loading} // Disable when no parts selected or while loading
           onPress={() => generateWorkoutAI(activeParts)}
         >
-          <Text style={styles.buttonText}>Generate</Text>
+          {loading ? (
+            <ActivityIndicator size="small" color="#fff" /> // Show loading spinner
+          ) : (
+            <Text style={styles.buttonText}>Generate</Text>
+          )}
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -213,6 +235,9 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 8,
     alignItems: "center",
+  },
+  loadingButton: {
+    backgroundColor: "#666", // Button color when loading
   },
   disabledButton: {
     backgroundColor: "#ccc", // Gray when disabled

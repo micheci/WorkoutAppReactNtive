@@ -18,7 +18,18 @@ async function addUserWorkout(data:IWorkoutPost) {
   }
 }
 
+async function saveGeneratedWorkoutToUser(data:IWorkoutPost) {
+  try {
+   console.log(data,'inthestore123')
+    const response = await WorkoutService.saveAIWorkout(data); 
+    return response;
+  } catch (e) {
+    console.error(e);
+  }
+}
+
 export const workoutStore = {
     WorkoutState,
     addUserWorkout,
+    saveGeneratedWorkoutToUser
 };

@@ -4,13 +4,26 @@ export interface IWorkoutPost {
     exercises: IWorkoutExercise[]; // Array of exercises
   }
   export interface IWorkoutExercise {
-    exerciseId: number; // ID of the exercise
+    exerciseId?: number; // ID of the exercise
     name: string; // Name of the exercise
-    category: string; // Category of the exercise (e.g., "Back")
-    muscle: string; // Target muscles
-    equipment: string; // Equipment used
+    category?: string; // Category of the exercise (e.g., "Back")
+    muscle?: string; // Target muscles
+    equipment?: string; // Equipment used
     reps: number; // Reps for the workout
     sets: number; // Sets for the workout
-    imageUrl: string; // Exercise image URL
-    instructions: string; // Instructions for the exercise
+    imageUrl?: string; // Exercise image URL
+    instructions?: string; // Instructions for the exercise
   }
+
+//response from ai
+export interface AIWorkout {
+  name: string;
+  description: string;
+  exercises: AIExercise[];
+}
+
+export interface AIExercise {
+  name: string;
+  sets: number;
+  reps: number;
+}
