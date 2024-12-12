@@ -9,7 +9,7 @@ class AIService {
     try {
       // Retrieve the token from secure storage
       //const token = await SecureStore.getItemAsync("token"); 
-const token='eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJIT0xBIiwiaWF0IjoxNzMzODc1NTczLCJleHAiOjE3MzM5ODM1NzN9.cQNOUOz8Pph5a0LGT7zzMHqkubW-cumbIEYtrJqi6pI'
+const token='eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJIT0xBIiwiaWF0IjoxNzMzODc4NzI0LCJleHAiOjE3MzM5ODY3MjR9.RJABOE6Fe1g_dsBPkQTFJC6HB3mHpNIFYWiIG8XwWjE'
       if (!token) {
         throw new Error("Token not found. Please login again.");
       }

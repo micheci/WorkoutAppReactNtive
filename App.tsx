@@ -20,6 +20,7 @@ import V2AddWorkout from "./screens/v2AddWorkout";
 import ViewAddWorkoutHome from "./screens/ViewOrAddWorkoutHome";
 import V2BodyDiagram from "./screens/v2BodyDiagram";
 import V2GeneratedWorkouts from "./screens/v2GeneratedWorkout";
+import ViewWorkout from "./screens/v2ViewUserWorkout";
 
 const Stack = createNativeStackNavigator();
 
@@ -60,6 +61,7 @@ export default function App() {
               name="V2GeneratedWorkouts"
               component={V2GeneratedWorkouts}
             />
+            <Stack.Screen name="ViewUserWorkouts" component={ViewWorkout} />
           </Stack.Navigator>
           <StatusBar style="auto" />
         </NavigationContainer>

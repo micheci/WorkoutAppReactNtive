@@ -28,8 +28,18 @@ async function saveGeneratedWorkoutToUser(data:IWorkoutPost) {
   }
 }
 
+async function getUsersWorkouts() {
+  try {
+    const response = await WorkoutService.getUserWorkouts(); 
+    return response;
+  } catch (e) {
+    console.error(e);
+  }
+}
+
 export const workoutStore = {
     WorkoutState,
     addUserWorkout,
-    saveGeneratedWorkoutToUser
+    saveGeneratedWorkoutToUser,
+    getUsersWorkouts
 };
