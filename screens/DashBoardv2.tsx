@@ -32,7 +32,7 @@ const DashboardV2: React.FC = () => {
   };
 
   const toAddWorkouts = () => {
-    navigation.navigate("V2AddWorkout");
+    navigation.navigate("ViewLogUserWorkouts");
   };
 
   return (
@@ -43,7 +43,7 @@ const DashboardV2: React.FC = () => {
       {/* Search Bar */}
       <SearchBar query={searchQuery} onSearch={handleSearch} />
       {/* Box to allow users to log exercises  */}
-      {/* <LogWorkout onPress={() => toAddWorkouts()} /> */}
+      <LogWorkout onPress={() => toAddWorkouts()} />
       <LogExercise onPress={() => toLogExercise()} />
 
       {/* Graphs Section */}
