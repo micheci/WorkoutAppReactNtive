@@ -36,16 +36,6 @@ const V2ViewLogWorkouts = () => {
     fetchWorkouts();
   }, []);
 
-  // Navigate to the 'Add Workout' screen
-  const handleCreateWorkout = () => {
-    navigation.navigate("V2AddWorkout"); // Adjust the route name if necessary
-  };
-
-  // Navigate to the 'Body diagram' screen so they can click on what body parts
-  const goToBodyDiagram = () => {
-    navigation.navigate("BodyDiagram"); // Adjust the route name if necessary
-  };
-
   // Navigate to the 'Body diagram' screen so they can click on what body parts
   const goToViewWorkout = (workout: any) => {
     navigation.navigate("ViewUserWorkouts", { workout }); // Pass the workout as a parameter
@@ -86,18 +76,6 @@ const V2ViewLogWorkouts = () => {
       )}
 
       {/* Button to create a new workout */}
-      <TouchableOpacity
-        style={styles.createButton}
-        onPress={handleCreateWorkout}
-      >
-        <Text style={styles.createButtonText}>Create New Workout</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.createButton} onPress={goToBodyDiagram}>
-        <Text style={styles.createButtonText}>
-          Dont know where to start? We can make you a FREE custom workout!
-        </Text>
-      </TouchableOpacity>
     </SafeAreaView>
   );
 };

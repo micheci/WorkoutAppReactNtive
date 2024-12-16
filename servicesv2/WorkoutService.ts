@@ -56,7 +56,7 @@ console.log('beforeSrvice')
     try {
       // Retrieve the token from secure storage
       //const token = await SecureStore.getItemAsync("token"); 
-const token='eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJIT0xBIiwiaWF0IjoxNzMzOTQ4NzY5LCJleHAiOjE3MzQwNTY3Njl9.domuhJpjOx9V1aF90dee0L75PukxqoStwjOOhunB44A'
+const token='eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJIT0xBIiwiaWF0IjoxNzM0MzE3MzA1LCJleHAiOjE3MzQ0MjUzMDV9.a6rDSfBo5ezO5G4iNPmt-u12Bd__yOx2CjPmC5t482Q'
       if (!token) {
         throw new Error("Token not found. Please login again.");
       }
