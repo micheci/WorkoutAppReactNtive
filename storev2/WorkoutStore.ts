@@ -37,9 +37,19 @@ async function getUsersWorkouts() {
   }
 }
 
+async function logUserWorkout(data:any) {
+  try {
+    const response = await WorkoutService.logUserWorkout(data); 
+    return response;
+  } catch (e) {
+    console.error(e);
+  }
+}
+
 export const workoutStore = {
     WorkoutState,
     addUserWorkout,
     saveGeneratedWorkoutToUser,
-    getUsersWorkouts
+    getUsersWorkouts,
+    logUserWorkout
 };

@@ -56,7 +56,7 @@ console.log('beforeSrvice')
     try {
       // Retrieve the token from secure storage
       //const token = await SecureStore.getItemAsync("token"); 
-const token='eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJIT0xBIiwiaWF0IjoxNzM0MzE3MzA1LCJleHAiOjE3MzQ0MjUzMDV9.a6rDSfBo5ezO5G4iNPmt-u12Bd__yOx2CjPmC5t482Q'
+const token='eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJIT0xBIiwiaWF0IjoxNzM0NDA4NDE0LCJleHAiOjE3MzQ1MTY0MTR9.kwv93zAxOf8soxuAoWLBUBMDU_bG7tbeDpNuSH5Nyt4'
       if (!token) {
         throw new Error("Token not found. Please login again.");
       }
@@ -67,6 +67,30 @@ const token='eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJIT0xBIiwiaWF0IjoxNzM0MzE3MzA1LCJleH
       });
  console.log(response,'inservice')
        return response.data; // Return the response data
+    } catch (error) {
+      console.error("Error fetching exercises:", error);
+      throw error; // Re-throw the error for further handling
+    }
+  }
+
+  //Logging user workou
+  static async logUserWorkout(data:any) {
+    try {
+      // Retrieve the token from secure storage
+      //const token = await SecureStore.getItemAsync("token"); 
+const token='eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJIT0xBIiwiaWF0IjoxNzM0NDA4NDE0LCJleHAiOjE3MzQ1MTY0MTR9.kwv93zAxOf8soxuAoWLBUBMDU_bG7tbeDpNuSH5Nyt4'
+      if (!token) {
+        throw new Error("Token not found. Please login again.");
+      }
+console.log('beforeSrvice')
+      // Send a GET request to fetch exercises
+      const response = await axios.post(`${API_URL}/api/workout/add`,data ,{
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+        },
+      });
+console.log(response,'inservice')
+      return response.data; // Return the response data
     } catch (error) {
       console.error("Error fetching exercises:", error);
       throw error; // Re-throw the error for further handling

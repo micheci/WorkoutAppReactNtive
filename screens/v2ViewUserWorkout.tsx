@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker"; // Using Expo DateTimePicker
+import { workoutStore } from "../storev2/WorkoutStore";
 
 const ViewWorkout = ({ route }: any) => {
   const { workout } = route.params;
@@ -39,7 +40,7 @@ const ViewWorkout = ({ route }: any) => {
     const workoutData = {
       workoutId: workout.id,
       date: selectedDate.toISOString(), // Send the selected date in ISO format
-      notes: "Felt great, but need to improve strength.", // You can get this value from the state if needed
+      notes: "TEST.", // You can get this value from the state if needed
       exercises: customExercises.map(
         (exercise: { id: any; sets: any; reps: any; weight: string }) => ({
           exerciseId: exercise.id,
@@ -52,6 +53,7 @@ const ViewWorkout = ({ route }: any) => {
 
     console.log("Workout data to send:", workoutData);
     // Add logic here to save the workout to the database or API
+    workoutStore.logUserWorkout(workoutData);
   };
 
   const onDateChange = (event: any, selectedDate: Date | undefined) => {
