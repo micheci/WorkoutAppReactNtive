@@ -22,6 +22,7 @@ import V2BodyDiagram from "./screens/v2BodyDiagram";
 import V2GeneratedWorkouts from "./screens/v2GeneratedWorkout";
 import ViewWorkout from "./screens/v2ViewUserWorkout";
 import V2ViewLogWorkouts from "./screens/ViewOrLogWorkout";
+import V2CalenderView from "./screens/v2CalenderView";
 
 const Stack = createNativeStackNavigator();
 
@@ -67,6 +68,7 @@ export default function App() {
               name="ViewLogUserWorkouts"
               component={V2ViewLogWorkouts}
             />
+            <Stack.Screen name="CalenderView" component={V2CalenderView} />
           </Stack.Navigator>
           <StatusBar style="auto" />
         </NavigationContainer>

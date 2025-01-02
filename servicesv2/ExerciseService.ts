@@ -9,7 +9,7 @@ class ExerciseService {
     try {
       // Retrieve the token from secure storage
       //const token = await SecureStore.getItemAsync("token"); 
-const token='eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJIT0xBIiwiaWF0IjoxNzMyOTk1OTQ2LCJleHAiOjE3MzMxMDM5NDZ9.oCw_zgDdmPhc2CEL_J9rAGKAlJfR_zFNWRJdX4onYsE'
+const token='eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJIT0xBIiwiaWF0IjoxNzM1ODM3MzE0LCJleHAiOjE3MzU5NDUzMTR9.GJnDQq-BY01T7dCMsQFy7rtfXDACcSDzQ0xIpPyQEp4'
       if (!token) {
         throw new Error("Token not found. Please login again.");
       }

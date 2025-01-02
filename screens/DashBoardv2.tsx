@@ -11,6 +11,7 @@ import DashBaordHeader from "../components/DashboardHeader";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../interfaces/StackInterfaces";
 import LogWorkout from "../components/LogWorkout";
+import CalenderDashboard from "../components/CalenderDashBoard";
 
 const DashboardV2: React.FC = () => {
   // State to hold the search query
@@ -31,6 +32,10 @@ const DashboardV2: React.FC = () => {
     navigation.navigate("Graphs");
   };
 
+  const toCalenderView = () => {
+    navigation.navigate("CalenderView");
+  };
+
   const toAddWorkouts = () => {
     navigation.navigate("ViewLogUserWorkouts");
   };
@@ -44,10 +49,12 @@ const DashboardV2: React.FC = () => {
       <SearchBar query={searchQuery} onSearch={handleSearch} />
       {/* Box to allow users to log exercises  */}
       <LogWorkout onPress={() => toAddWorkouts()} />
-      <LogExercise onPress={() => toLogExercise()} />
+      {/* <LogExercise onPress={() => toLogExercise()} /> */}
 
       {/* Graphs Section */}
-      <GraphDashboard onPress={() => toGraphs()} />
+      <CalenderDashboard onPress={() => toCalenderView()} />
+
+      {/* <GraphDashboard onPress={() => toGraphs()} /> */}
       {/* Main Dashboard Sections */}
       <HomeGrid />
     </ScrollView>

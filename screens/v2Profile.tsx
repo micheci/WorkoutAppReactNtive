@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -10,11 +10,17 @@ import {
   Image,
   Alert,
 } from "react-native";
+import { profileStore } from "../storev2/profileStore";
 
 const V2Profile = () => {
   const [darkMode, setDarkMode] = useState(false); // State for dark/light mode
-  const [contactInfo, setContactInfo] = useState("123-456-7890");
-  const [email, setEmail] = useState("user@example.com");
+  const [contactInfo, setContactInfo] = useState("");
+  const [email, setEmail] = useState("");
+  const [height, setHeight] = useState("");
+  const [username, setUsername] = useState("");
+
+  const [weight, setWeight] = useState("");
+  const [loading, setLoading] = useState(true); // For loading state
 
   const handleDeleteAccount = () => {
     Alert.alert(
@@ -30,6 +36,31 @@ const V2Profile = () => {
       ]
     );
   };
+
+  // Function to fetch user profile
+  const fetchUserProfile = async () => {
+    try {
+      const userInfo = await profileStore.getUserInformation(); // Fetch user info from your service
+
+      if (userInfo) {
+        // Map API response to your state variables
+        setEmail(userInfo.email);
+        setContactInfo(userInfo.phoneContact);
+        setHeight(userInfo.height); // Set height
+        setWeight(userInfo.weight); // Set weight
+        setUsername(userInfo.user.username);
+      }
+    } catch (error) {
+      console.error("Error fetching user information:", error);
+    } finally {
+      setLoading(false); // Stop loading
+    }
+  };
+
+  // Call fetchUserProfile when the component mounts
+  useEffect(() => {
+    fetchUserProfile();
+  }, []); // Empty dependency array to call once on mount
 
   const handleChangePassword = () => {
     console.log("Navigate to Change Password Page");
@@ -48,8 +79,11 @@ const V2Profile = () => {
           source={{ uri: "https://via.placeholder.com/100" }} // Replace with actual image URI
           style={styles.profileImage}
         />
-        <Text style={styles.name}>John Doe</Text>
-        <Text style={styles.username}>@johndoe</Text>
+        <TextInput
+          style={styles.name}
+          value={username}
+          onChangeText={setUsername}
+        />
       </View>
 
       {/* User Details */}
@@ -71,10 +105,18 @@ const V2Profile = () => {
         />
 
         <Text style={styles.infoTitle}>Height:</Text>
-        <Text style={styles.infoValue}>5'9" (175 cm)</Text>
+        <TextInput
+          style={styles.infoValue}
+          value={height.toString()} // Ensure height is a string for TextInput
+          onChangeText={(text) => setHeight(text)}
+        />
 
         <Text style={styles.infoTitle}>Weight:</Text>
-        <Text style={styles.infoValue}>160 lbs (72 kg)</Text>
+        <TextInput
+          style={styles.infoValue}
+          value={weight.toString()} // Ensure weight is a string for TextInput
+          onChangeText={(text) => setWeight(text)}
+        />
       </View>
 
       {/* Options Section */}
@@ -91,12 +133,6 @@ const V2Profile = () => {
         >
           <Text style={styles.optionButtonText}>Delete Account</Text>
         </TouchableOpacity>
-      </View>
-
-      {/* Dark Mode Toggle */}
-      <View style={styles.darkModeSection}>
-        <Text style={styles.darkModeText}>Dark Mode</Text>
-        <Switch value={darkMode} onValueChange={setDarkMode} />
       </View>
     </SafeAreaView>
   );
