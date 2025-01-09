@@ -6,21 +6,23 @@ import {
   TouchableOpacity,
   SafeAreaView,
   TextInput,
-  Switch,
   Image,
   Alert,
 } from "react-native";
-import { profileStore } from "../storev2/profileStore";
+import { profileStore } from "../storev2/ProfileStore";
+import { Picker } from "@react-native-picker/picker"; // Install this package
+import Slider from "@react-native-community/slider";
 
 const V2Profile = () => {
-  const [darkMode, setDarkMode] = useState(false); // State for dark/light mode
   const [contactInfo, setContactInfo] = useState("");
   const [email, setEmail] = useState("");
-  const [height, setHeight] = useState("");
+  const [heightFeet, setHeightFeet] = useState("5");
+  const [heightInches, setHeightInches] = useState("7");
   const [username, setUsername] = useState("");
-
   const [weight, setWeight] = useState("");
-  const [loading, setLoading] = useState(true); // For loading state
+  const [loading, setLoading] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
+  const [originalProfile, setOriginalProfile] = useState(null); // Original profile data
 
   const handleDeleteAccount = () => {
     Alert.alert(
@@ -37,101 +39,216 @@ const V2Profile = () => {
     );
   };
 
-  // Function to fetch user profile
   const fetchUserProfile = async () => {
     try {
-      const userInfo = await profileStore.getUserInformation(); // Fetch user info from your service
+      const userInfo = await profileStore.getUserInformation();
 
       if (userInfo) {
-        // Map API response to your state variables
         setEmail(userInfo.email);
         setContactInfo(userInfo.phoneContact);
-        setHeight(userInfo.height); // Set height
-        setWeight(userInfo.weight); // Set weight
+        setWeight(userInfo.weight);
         setUsername(userInfo.user.username);
+
+        // Convert total inches to feet and inches for the height
+        if (userInfo.height) {
+          const totalInches = parseInt(userInfo.height); // Assuming height is stored in inches
+          const { feet, inches } = convertToFeetAndInches(totalInches);
+          setHeightFeet(feet.toString());
+          setHeightInches(inches.toString());
+        }
+
+        // Store original profile data
+        setOriginalProfile({
+          email: userInfo.email,
+          phoneContact: userInfo.phoneContact,
+          height: userInfo.height,
+          weight: userInfo.weight,
+        });
       }
     } catch (error) {
       console.error("Error fetching user information:", error);
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
 
-  // Call fetchUserProfile when the component mounts
   useEffect(() => {
     fetchUserProfile();
-  }, []); // Empty dependency array to call once on mount
+  }, []);
 
   const handleChangePassword = () => {
     console.log("Navigate to Change Password Page");
   };
+  const convertToTotalInches = (feet: string, inches: string) => {
+    return parseInt(feet) * 12 + parseInt(inches); // 1 foot = 12 inches
+  };
+  const convertToFeetAndInches = (totalInches: number) => {
+    const feet = Math.floor(totalInches / 12); // Get the whole number of feet
+    const inches = totalInches % 12; // Get the remaining inches
+    return { feet, inches };
+  };
+  const handleSaveChanges = () => {
+    const totalInches = convertToTotalInches(heightFeet, heightInches);
+    const updatedProfile = {
+      email,
+      phoneContact: contactInfo,
+      height: totalInches.toString(), // Send total inches as string
+      weight,
+    };
+
+    // Compare current state with the original profile
+    const isChanged =
+      JSON.stringify(updatedProfile) !== JSON.stringify(originalProfile);
+
+    if (isChanged) {
+      console.log("Profile updated:", updatedProfile);
+      profileStore.updateProfileInformation(updatedProfile);
+      setOriginalProfile(updatedProfile); // Update original profile to reflect saved changes
+    } else {
+      console.log("No changes detected. Update skipped.");
+    }
+
+    setIsEditing(false); // Exit edit mode
+  };
 
   return (
-    <SafeAreaView
-      style={[
-        styles.container,
-        darkMode ? styles.darkContainer : styles.lightContainer,
-      ]}
-    >
+    <SafeAreaView style={[styles.container, styles.lightContainer]}>
       {/* Profile Picture */}
       <View style={styles.profileSection}>
         <Image
-          source={{ uri: "https://via.placeholder.com/100" }} // Replace with actual image URI
+          source={{ uri: "https://via.placeholder.com/100" }}
           style={styles.profileImage}
         />
-        <TextInput
-          style={styles.name}
-          value={username}
-          onChangeText={setUsername}
-        />
+        <Text style={styles.name}>{username}</Text>
       </View>
 
       {/* User Details */}
       <View style={styles.infoSection}>
         <Text style={styles.infoTitle}>Email:</Text>
-        <TextInput
-          style={styles.infoValue}
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-        />
+        {isEditing ? (
+          <TextInput
+            style={[styles.infoValue, isEditing && styles.inputField]}
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+          />
+        ) : (
+          <Text style={styles.infoValue}>{email}</Text>
+        )}
 
         <Text style={styles.infoTitle}>Contact Info:</Text>
-        <TextInput
-          style={styles.infoValue}
-          value={contactInfo}
-          onChangeText={setContactInfo}
-          keyboardType="phone-pad"
-        />
+        {isEditing ? (
+          <TextInput
+            style={[styles.infoValue, isEditing && styles.inputField]}
+            value={contactInfo}
+            onChangeText={setContactInfo}
+            keyboardType="phone-pad"
+          />
+        ) : (
+          <Text style={styles.infoValue}>{contactInfo}</Text>
+        )}
 
-        <Text style={styles.infoTitle}>Height:</Text>
-        <TextInput
-          style={styles.infoValue}
-          value={height.toString()} // Ensure height is a string for TextInput
-          onChangeText={(text) => setHeight(text)}
-        />
+        <View style={styles.infoSection}>
+          {/* Height Section */}
+          <Text style={styles.infoTitle}>Height:</Text>
+          {isEditing ? (
+            <View style={styles.inputRow}>
+              <View style={styles.pickerContainer}>
+                <Picker
+                  selectedValue={heightFeet}
+                  style={styles.picker}
+                  onValueChange={setHeightFeet}
+                >
+                  {/* Feet Picker */}
+                  {[...Array(10).keys()].map((i) => (
+                    <Picker.Item
+                      key={i}
+                      label={`${i + 4} ft`}
+                      value={`${i + 4}`}
+                    />
+                  ))}
+                </Picker>
+              </View>
 
-        <Text style={styles.infoTitle}>Weight:</Text>
-        <TextInput
-          style={styles.infoValue}
-          value={weight.toString()} // Ensure weight is a string for TextInput
-          onChangeText={(text) => setWeight(text)}
-        />
+              <View style={styles.pickerContainer}>
+                <Picker
+                  selectedValue={heightInches}
+                  style={styles.picker}
+                  onValueChange={setHeightInches}
+                >
+                  {/* Inches Picker */}
+                  {[...Array(12).keys()].map((i) => (
+                    <Picker.Item key={i} label={`${i} in`} value={`${i}`} />
+                  ))}
+                </Picker>
+              </View>
+            </View>
+          ) : (
+            <Text style={styles.infoValue}>
+              {heightFeet && heightInches
+                ? `${heightFeet} ft ${heightInches} in`
+                : "N/A"}
+            </Text>
+          )}
+
+          {/* Weight Section */}
+          <Text style={styles.infoTitle}>Weight:</Text>
+          {isEditing ? (
+            <View style={styles.inputRowWeight}>
+              <Slider
+                style={styles.slider}
+                value={weight}
+                onValueChange={setWeight}
+                minimumValue={30}
+                maximumValue={200}
+                step={1}
+              />
+              <View style={styles.sliderValueContainer}>
+                <Text style={styles.sliderValue}>{weight} kg</Text>
+              </View>
+            </View>
+          ) : (
+            <Text style={styles.infoValue}>
+              {weight ? `${weight} kg` : "N/A"}
+            </Text>
+          )}
+        </View>
       </View>
 
       {/* Options Section */}
+      {/* Options Section */}
       <View style={styles.optionsSection}>
+        {!isEditing && (
+          <>
+            <TouchableOpacity
+              style={styles.optionButton}
+              onPress={handleChangePassword}
+            >
+              <Text style={styles.optionButtonText}>Change Password</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.optionButton, styles.deleteButton]}
+              onPress={handleDeleteAccount}
+            >
+              <Text style={styles.optionButtonText}>Delete Account</Text>
+            </TouchableOpacity>
+          </>
+        )}
+
         <TouchableOpacity
-          style={styles.optionButton}
-          onPress={handleChangePassword}
+          style={[styles.optionButton, styles.editButton]}
+          onPress={() => {
+            if (isEditing) {
+              handleSaveChanges(); // Save changes if in edit mode
+            } else {
+              setIsEditing(true); // Enable edit mode
+            }
+          }}
         >
-          <Text style={styles.optionButtonText}>Change Password</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.optionButton, styles.deleteButton]}
-          onPress={handleDeleteAccount}
-        >
-          <Text style={styles.optionButtonText}>Delete Account</Text>
+          <Text style={styles.optionButtonText}>
+            {isEditing ? "Save" : "Edit"}
+          </Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -182,6 +299,12 @@ const styles = StyleSheet.create({
     borderBottomColor: "#ccc",
     marginBottom: 10,
   },
+  inputField: {
+    backgroundColor: "#f0f0f0", // Add background color for input fields in edit mode
+    borderColor: "#007BFF", // Add border color for input fields in edit mode
+    borderWidth: 1, // Add border width
+    borderRadius: 5, // Optional: rounded borders
+  },
   optionsSection: {
     marginBottom: 20,
   },
@@ -195,17 +318,46 @@ const styles = StyleSheet.create({
   deleteButton: {
     backgroundColor: "#FF6347",
   },
+  editButton: {
+    backgroundColor: "#28A745",
+  },
   optionButtonText: {
     color: "#fff",
     fontSize: 16,
   },
-  darkModeSection: {
+  picker: {
+    flex: 1,
+    height: 50,
+  },
+  pickerContainer: {
+    flex: 1,
+    marginHorizontal: 8,
+  },
+  inputRow: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
+    marginBottom: 200, // Increased space between height and weight section
   },
-  darkModeText: {
+  inputRowWeight: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  sliderContainer: {
+    marginVertical: 10,
+  },
+  sliderValue: {
+    textAlign: "center",
     fontSize: 16,
+    fontWeight: "bold",
+  },
+  slider: {
+    flex: 1,
+    marginHorizontal: 10,
+  },
+  sliderValueContainer: {
+    width: 60,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 

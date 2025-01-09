@@ -17,7 +17,21 @@ async function getUserInformation() {
   }
 }
 
+async function updateProfileInformation(data:any) {
+    try {
+      const exercisesArray = await ProfileService.updateProfileInfo(data); // Fetch exercises from the backend
+      //PicklistState.exercises.set(exercisesArray); // Store fetched exercises in state
+      console.log(exercisesArray,'POOPY')
+      return exercisesArray;
+    } catch (e) {
+      console.error(e);
+      //PicklistState.exercises.set([]); // Reset state on error
+    }
+  }
+  
+
 export const profileStore = {
     ProfileState,
   getUserInformation,
+  updateProfileInformation
 };

@@ -9,7 +9,7 @@ class ProfileService {
     try {
       // Retrieve the token from secure storage
       //const token = await SecureStore.getItemAsync("token"); 
-const token='eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJIT0xBIiwiaWF0IjoxNzM1ODQyMTU0LCJleHAiOjE3MzU5NTAxNTR9.qTQGBDUx-hG7He2t5rs3Jc7olTKS7xoCmAfZ8FudS9I'
+const token='eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJIT0xBIiwiaWF0IjoxNzM2Mzc2MDE1LCJleHAiOjE3MzY0ODQwMTV9.7cTFMPXM_kHgboJt2bX5X9U6ZzgSryvkfHwf9cC5zgQ'
       if (!token) {
         throw new Error("Token not found. Please login again.");
       }
@@ -28,6 +28,27 @@ console.log(response,'inservice')
   }
 
   // Add other service methods here as needed
+  static async updateProfileInfo(data:any) {
+    try {
+      // Retrieve the token from secure storage
+      //const token = await SecureStore.getItemAsync("token"); 
+const token='eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJIT0xBIiwiaWF0IjoxNzM2Mzc2MDE1LCJleHAiOjE3MzY0ODQwMTV9.7cTFMPXM_kHgboJt2bX5X9U6ZzgSryvkfHwf9cC5zgQ'
+      if (!token) {
+        throw new Error("Token not found. Please login again.");
+      }
+      // Send a GET request to fetch exercises
+      const response = await axios.put(`${API_URL}/api/userprofile/updateProfile` ,data,{
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+        },
+      });
+console.log(response,'inservice')
+      return response.data; // Return the response data
+    } catch (error) {
+      console.error("Error fetching exercises:", error);
+      throw error; // Re-throw the error for further handling
+    }
+  }
 }
 
 export default ProfileService;
