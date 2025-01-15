@@ -18,21 +18,25 @@ const V2ViewLogWorkouts = () => {
   const [workouts, setWorkouts] = useState<any[]>([]);
 
   useEffect(() => {
+    let test;
+
     const fetchWorkouts = async () => {
       try {
         setLoading(true); // Start loading
         const response = await workoutStore.getUsersWorkouts();
+        test = response;
         console.log("Workout response:", response); // Debug response
         if (response) {
           setWorkouts(response); // Set the workouts in state
         }
+        console.log("hello", response);
       } catch (e) {
         console.error("Error fetching workouts:", e);
       } finally {
         setLoading(false); // End loading
       }
     };
-
+    console.log(test, "oom");
     fetchWorkouts();
   }, []);
 

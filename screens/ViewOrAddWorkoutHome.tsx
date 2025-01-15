@@ -76,7 +76,7 @@ const V2ViewUserWorkouts = () => {
 
       {/* If there are no workouts */}
       {workouts.length === 0 ? (
-        <Text style={styles.noWorkoutsText}>No workouts created yet.</Text>
+        <Text style={styles.noWorkoutsText}>No workouts created yetd.</Text>
       ) : (
         <FlatList
           data={workouts}
